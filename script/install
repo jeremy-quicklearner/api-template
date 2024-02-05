@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+
+# Directory this script is in
+ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null 2>&1 && pwd)"
+RUNTIME=$ROOTDIR/runtime
+
+echo '[cmd] Activating Virtualenv...'
+source $RUNTIME/bin/activate
+
+echo "[cmd] Activated. Running pip install..."
+
+set +e
+pip install $1 ; STATUS=$?
+set -e
+
+echo "[cmd] Command exited with status $STATUS. Deactivating Virtualenv"
+deactivate
+
+exit $?
