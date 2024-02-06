@@ -3,18 +3,18 @@ set -e
 
 # Directory this script is in
 ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null 2>&1 && pwd)"
+SOURCE=$ROOTDIR/src
 RUNTIME=$ROOTDIR/runtime
 
-echo '[cmd] Activating Virtualenv...'
+echo '[install] Activating Virtualenv...'
 source $RUNTIME/bin/activate
 
-echo "[cmd] Activated. Running pip install..."
+echo "[install] Activated. Running <pip install ${@:2}>..."
 
-set +e
-pip install $1 ; STATUS=$?
-set -e
+pip install ${@:1}
+pip freeze > $SOURCE/requirements.txt
 
-echo "[cmd] Command exited with status $STATUS. Deactivating Virtualenv"
+echo "[cmd] Install Succeeded. Deactivating Virtualenv"
 deactivate
 
 exit $?

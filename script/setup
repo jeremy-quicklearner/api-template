@@ -3,6 +3,12 @@ set -e
 
 # Directory this script is in
 ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null 2>&1 && pwd )"
+SCRIPT=ROOTDIR/script
+SOURCE=$ROOTDIR/src
 RUNTIME=$ROOTDIR/runtime
 
+echo "[setup] Setting up Virtualenv..."
 python3 -m venv $RUNTIME
+
+echo "[setup] Provisioning dependencies..."
+SCRIPT/install -r $SOURCE/requirements.txt
