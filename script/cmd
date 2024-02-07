@@ -11,7 +11,7 @@ source $RUNTIME/bin/activate
 echo "[cmd] Activated. Running command <$1> with args <${@:2}>..."
 
 set +e
-python src/cmd/$1.py ${@:2} ; STATUS=$?
+python src/$1.py ${@:2} ; STATUS=$?
 set -e
 
 echo "[cmd] Command exited with status $STATUS. Deactivating Virtualenv"
