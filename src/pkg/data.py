@@ -31,7 +31,13 @@ class Data(object):
         self.session.commit()
 
     # Type-specific
-    def findUsersByName(self, name):
-        query = sa.select(types.User).filter(types.User.name == name)
+    def findBooksByPersonName(self, name):
+        query = sa.select(
+            types.Person, types.PersonOwnsBook, types.Book,
+        ).filter(
+            types.Person.id == types.PersonOwnsBook.personId,
+        ).filter(
+            types.Book.id == types.PersonOwnsBook.bookId
+        )
         results = self.session.execute(query)
-        return [r[0] for r in results.all()]
+        return [r[2] for r in results.all()]

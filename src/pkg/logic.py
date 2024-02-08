@@ -20,5 +20,5 @@ class Logic(object):
         return self.data.delete(type, pkVal)
 
     # Type-Specific
-    def findUsersByName(self, name):
-        return self.data.findUsersByName(name)
+    def findBooksByPersonName(self, name):
+        return self.data.findBooksByPersonName(name)

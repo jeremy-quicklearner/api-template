@@ -4,7 +4,9 @@ from . import types
 from . import logic
 
 crud = {
-    types.User: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+    types.Person: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+    types.Book: ['CREATE', 'READ', 'UPDATE', 'DELETE'],
+    types.PersonOwnsBook: ['CREATE', 'DELETE'],
 }
 
 class Service(object):
@@ -24,24 +26,28 @@ class Service(object):
                 "/%s/<int:pkv>" % Type.__table__.name,
                 methods=methods,
                 endpoint='%s/pkv' % Type.__table__.name,
-                view_func=lambda pkv : self.handleCRUD(Type, pkv, allowOperations),
+                view_func=lambda pkv, T=Type : self.handleCRUD(T, pkv, allowOperations),
             )
             self.flask.add_url_rule(
                 "/%s" % Type.__table__.name,
                 methods=methods,
                 endpoint=Type.__table__.name,
-                view_func=lambda : self.handleCRUD(Type, None, allowOperations),
+                view_func=lambda T=Type : self.handleCRUD(T, None, allowOperations),
             )
 
         @self.flask.route("/")
         def hello():
             return "You have reached Jeremy's API Server"
 
-        @self.flask.route("/findUsersByName", methods=['GET'])
-        def findUsersByName():
+        @self.flask.route("/findBooksByPersonName", methods=["GET"])
+        def findBooksByPersonName():
             if 'name' not in flask.request.args:
                 flask.abort(400)
-            return flask.jsonify([{c.name:getattr(record, c.name) for c in record.__table__.columns} for record in self.logic.findUsersByName(flask.request.args['name'])])
+            return flask.jsonify([
+                types.structify(record) for record in self.logic.findBooksByPersonName(
+                    flask.request.args['name']
+                )
+            ])
 
     def run(self):
         return self.flask.run()
@@ -58,10 +64,10 @@ class Service(object):
 
     def post(self, type, pkVal=None):
         for key, val in flask.request.form.items():
+            print(type.__table__.columns)
             if key not in type.__table__.columns:
-                flask.abort(400)
+                flask.abort(400, 'Bad parameter name <%s>. Accepted names are %s' % (key, [c.name for c in type.__table__.columns]))
 
-        print(pkVal)
         if not pkVal:
             record = type(**flask.request.form)
         else:
