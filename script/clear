@@ -1,0 +1,18 @@
+#!/bin/bash
+set -e
+
+# Directory this script is in
+ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null 2>&1 && pwd)"
+RUNTIME=$ROOTDIR/runtime
+
+echo '[install] Activating Virtualenv...'
+source $RUNTIME/bin/activate
+
+echo "[install] Activated. Deleting DB..."
+
+rm $RUNTIME/db.sqlite3
+
+echo "[cmd] Deletion Succeeded. Deactivating Virtualenv"
+deactivate
+
+exit $?

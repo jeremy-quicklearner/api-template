@@ -1,24 +1,19 @@
 from . import types
 from . import data
 
-class Logic(object):
-    # Logic layer
-    def __init__(self):
-        self.data = data.Data()
+def finalize():
+    data.finalize()
 
-    def finalize(self):
-        self.data.finalize()
+# Generic CRUD
+def get(type, pkVal):
+    return data.get(type, pkVal)
 
-    # Generic CRUD
-    def get(self, type, pkVal):
-        return self.data.get(type, pkVal)
+def createOrUpdate(record):
+    return data.createOrUpdate(record)
 
-    def createOrUpdate(self, record):
-        return self.data.createOrUpdate(record)
+def delete(type, pkVal):
+    return data.delete(type, pkVal)
 
-    def delete(self, type, pkVal):
-        return self.data.delete(type, pkVal)
-
-    # Type-Specific
-    def findBooksByPersonName(self, name):
-        return self.data.findBooksByPersonName(name)
+# Type-Specific
+def findBooksByPersonName(name):
+    return data.findBooksByPersonName(name)
